@@ -119,6 +119,9 @@
 			flex: 1;
 			flex-direction: column;
 			margin-left: 20px;
+			.desc{
+				color:#FFFFFF;
+			}
 			.name{
 				color:#666666;
 			}
