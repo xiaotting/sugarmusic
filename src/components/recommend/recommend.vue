@@ -18,7 +18,7 @@
 					<ul>
 						<li class="item" v-for="item in discList">
 							<div class="icon">
-								<img :src="item.imgurl" alt="" />
+								<img v-lazy="item.imgurl" alt="" />
 							</div>
 							<div class="text">
 								<h2 class="desc">{{item.dissname}}</h2>
@@ -130,5 +130,5 @@
 }
 }
 
- 
+
 </style>
