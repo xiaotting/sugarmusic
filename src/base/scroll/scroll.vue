@@ -48,7 +48,7 @@
       }
     },
     mounted() {
-      setTimeout(() => {
+        setTimeout(() => {
         this._initScroll()
       }, 20)
     },
@@ -64,7 +64,7 @@
 	        })
 	
 	        if (this.listenScroll) {
-	          	this.scroll.on('scroll', (pos) => {
+                this.scroll.on('scroll', (pos) => {
 	            	this.$emit('scroll', pos)
 	          	})
 	        }
