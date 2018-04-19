@@ -103,10 +103,8 @@
 	}
 	.item{
 		display: flex;
-		width:100%;
 		align-item:center;
-		margin-left:20px;
-		margin-top:10px;
+        margin: 10px 10px 0 20px;
 		.icon{
 			width: 60px;
 			img{
