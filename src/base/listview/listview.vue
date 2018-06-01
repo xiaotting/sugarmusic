@@ -170,11 +170,17 @@
         }
         .list-shortcut{
             position: absolute;
-            top:0px;
-            right: 0px;
-            display: flex;
-            /*line-height: 20px;*/
             z-index: 30;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            padding: 20px 0;
+            border-radius: 10px;
+            text-align: center;
+            background: rgba(0,0,0,0.7);
+            font-family: Helvetica;
+            font-size: 14px;
             .current{
                 color:#f39a00;
             }
