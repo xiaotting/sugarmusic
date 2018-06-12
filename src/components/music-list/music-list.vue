@@ -25,7 +25,7 @@
             @scroll="scroll"
         >
             <div class="song-list-wrapper">
-                <song-list :songs="songs">
+                <song-list :songs="songs" @select="selectItem">
 
                 </song-list>
             </div>
@@ -37,7 +37,7 @@
     import Scroll from '@/base/scroll/scroll'
     import SongList from '@/base/song-list/song-list'
     import {prefixStyle} from "../../common/js/dom";
-
+    import { mapActions } from 'vuex'
     const RESERVER_HEIGHT = 40
     const transform = prefixStyle('transform')
     export default {
@@ -102,7 +102,16 @@
             },
             scroll(pos){
                 this.scrollY = pos.y
-            }
+            },
+            selectItem(item,index){
+                this.selectPlay({
+                    list:this.songs,
+                    index
+                })
+            },
+            ...mapActions([
+                'selectPlay'
+            ])
         },
         computed: {
             bgStyle() {
@@ -128,12 +137,9 @@
         left:16px;
         &>.icon-back{
             display: block;
-            height: 10px;
-            width: 10px;
-            border: 3px solid #f39a00;
-            border-top:3px solid transparent;
-            border-right:3px solid transparent;
-            transform: rotate(45deg);
+            padding: 10px;
+            font-size: 22px;
+            color: #ffcd32;
         }
     }
     &>.title{
@@ -159,8 +165,8 @@
                 box-sizing: border-box;
                 width: 135px;
                 border-radius: 100px;
-                border: 1px solid #f39a00;
-                color:#f39a00;
+                border: 1px solid #ffcd32;;
+                color: #ffcd32;
                 text-align: center;
                 margin: 0 auto;
                 padding: 7px 0;
@@ -171,13 +177,10 @@
                     font-size: 12px;
                 }
                 &>.icon-play{
-                    display:inline-block;
-                    vertical-align:middle;
-                    width:15px;
-                    height:15px;
-                    border-radius: 50%;
-                    border: 1px solid #f39a00;
+                    display: inline-block;
+                    vertical-align: middle;
                     margin-right: 6px;
+                    font-size: 16px;
                 }
             }
         }
