@@ -1,6 +1,13 @@
 <template>
     <div class="player" v-show="playlist.length>0">
-        <div class="normal-player" v-show="fullScreen">
+        <transition
+            name="normal"
+            @enter="enter"
+            @after-enter="afterEnter"
+            @leave="leave"
+            @after-leave="afterLeave"
+        >
+            <div class="normal-player" v-show="fullScreen">
             <div class="background">
                 <img :src="currentSong.image" width="100%" height="100%">
             </div>
@@ -40,7 +47,9 @@
                 </div>
             </div>
         </div>
-        <div class="mini-player" v-show="!fullScreen" @click="open">
+        </transition>
+        <transition name="mini">
+            <div class="mini-player" v-show="!fullScreen" @click="open">
             <div class="icon">
                 <div class="imgWrapper">
                     <img width="40" height="40" :src="currentSong.image">
@@ -50,16 +59,20 @@
                 <h2 class="name" v-html="currentSong.name"></h2>
                 <p class="desc" v-html="currentSong.singer"></p>
             </div>
-            <div class="control"></div>
+            <div class="control">
+                <i class="icon-play-mini"></i>
+            </div>
             <div class="control">
                 <i class="icon-playlist"></i>
             </div>
         </div>
+        </transition>
     </div>
 </template>
 
 <script>
     import {mapGetters,mapMutations} from 'vuex'
+    import animations from 'create-keyframe-animation'
     export default {
         name: "player",
         computed:{
@@ -75,6 +88,14 @@
             },
             open(){
                 this.setFullScreen(true)
+            },
+            enter(el,done){
+
+            },
+            afterEnter(){},
+            leave(el,done){},
+            afterLeave(){},
+            _getPosAndScale(){
             },
             ...mapMutations({
                 setFullScreen:'SET_FULL_SCREEN'
@@ -191,6 +212,21 @@
             }
         }
     }
+    &.normal-enter-active,&.normal-leave-active{
+        transition: all 0.4s;
+        .top,.bottom{
+            transition: all 0.4s cubic-bezier(0.86,0.18,0.81,1.32);
+        }
+    }
+    &.normal-enter,&.normal-leave-to{
+        opacity: 0;
+        .top{
+            transform: translate3d(0,-100px,0);
+        }
+        .bottom{
+            transform: translate3d(0,100px,0);
+        }
+    }
 }
 .mini-player{
     display: flex;
@@ -249,6 +285,16 @@
             font-size: 30px;
             color: rgba(255,205,49,.5);
         }
+        &>.icon-play-mini{
+            font-size: 30px;
+            color: rgba(255,205,49,.5);
+        }
+    }
+    &.mini-enter-active,&.mini-leave-active{
+        transition: all 0.4s;
+    }
+    &.mini-enter,&.mini-leave-to{
+        opacity: 0;
     }
 }
 </style>

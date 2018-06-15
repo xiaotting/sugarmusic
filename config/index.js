@@ -10,15 +10,7 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-        // 'apis': {
-        //     target: 'https://c.y.qq.com',
-        //     changeOrigin: true,
-        //     pathRewrite: {
-        //         '^/apis': ''
-        //     }
-        // }
-    },
+    proxyTable: {},
 
     // Various Dev Server settings
     host: '0.0.0.0', // can be overwritten by process.env.HOST
@@ -46,12 +38,13 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+      port:9000,
+      index: path.resolve(__dirname, '../dist/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+      assetsRoot: path.resolve(__dirname, '../dist'),
+      assetsSubDirectory: 'static',
+      assetsPublicPath: '',
 
     /**
      * Source Maps
