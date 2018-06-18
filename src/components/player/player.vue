@@ -20,8 +20,8 @@
             </div>
             <div class="middle">
                 <div class="middle-l">
-                    <div class="cd-wraper">
-                        <div class="cd">
+                    <div class="cd-wraper" ref="cdWrapper">
+                        <div class="cd" :class="cdCls">
                             <img :src="currentSong.image" class="image">
                         </div>
                     </div>
@@ -36,7 +36,7 @@
                         <i class="icon-prev"></i>
                     </div>
                     <div class="icon i-center">
-                        <i class="icon-play"></i>
+                        <i :class="playIcon" @click="toggleplaying"></i>
                     </div>
                     <div class="icon i-right">
                         <i class="icon-next"></i>
@@ -51,7 +51,7 @@
         <transition name="mini">
             <div class="mini-player" v-show="!fullScreen" @click="open">
             <div class="icon">
-                <div class="imgWrapper">
+                <div class="imgWrapper" :class="cdCls">
                     <img width="40" height="40" :src="currentSong.image">
                 </div>
             </div>
@@ -60,27 +60,55 @@
                 <p class="desc" v-html="currentSong.singer"></p>
             </div>
             <div class="control">
-                <i class="icon-play-mini"></i>
+                <i :class="miniIcon" @click.stop="toggleplaying"></i>
             </div>
             <div class="control">
                 <i class="icon-playlist"></i>
             </div>
         </div>
         </transition>
+	    <audio :src="currentSong.url" ref="audio">
+	    	
+	    </audio>
     </div>
 </template>
 
 <script>
     import {mapGetters,mapMutations} from 'vuex'
     import animations from 'create-keyframe-animation'
+    import { prefixStyle } from '@/common/js/dom'
     export default {
         name: "player",
         computed:{
+        	cdCls(){
+        		return this.playing ? 'play':'play pause'
+        	},
+        	playIcon(){
+        		return this.playing ? 'icon-pause':'icon-play'
+        	},
+        	miniIcon(){
+        		return this.playing ? 'icon-pause-mini':'icon-play-mini'
+        	},
             ...mapGetters([
                 'fullScreen',
                 'playlist',
-                'currentSong'
+                'currentSong',
+                'playing'
             ])
+        },
+        watch:{
+        	currentSong(){
+        		this.$nextTick(()=>{
+        			this.$refs.audio.play()
+        		})
+        		
+        	},
+        	playing(newPlaying){
+        		this.$nextTick(()=>{
+        			const audio = this.$refs.audio
+        			newPlaying ? audio.play():audio.pause()
+        		})
+        	}
         },
         methods:{
             back(){
@@ -89,16 +117,71 @@
             open(){
                 this.setFullScreen(true)
             },
-            enter(el,done){
+            enter(el, done) {
+		        const {x, y, scale} = this._getPosAndScale()
+		
+		        let animation = {
+		          	0: {
+		            	transform: `translate3d(${x}px,${y}px,0) scale(${scale})`
+		          	},
+		          	60: {
+		            	transform: `translate3d(0,0,0) scale(1.1)`
+		          	},
+		          	100: {
+		            	transform: `translate3d(0,0,0) scale(1)`
+		          	}
+		        }
+		
+		        animations.registerAnimation({
+		          	name: 'move',
+		          	animation,
+		          	presets: {
+		            	duration: 400,
+		            	easing: 'linear'
+		          	}
+		        })
 
-            },
-            afterEnter(){},
-            leave(el,done){},
-            afterLeave(){},
-            _getPosAndScale(){
+        		animations.runAnimation(this.$refs.cdWrapper, 'move', done)
+      		},
+	      	afterEnter() {
+	        	animations.unregisterAnimation('move')
+	        	this.$refs.cdWrapper.style.animation = ''
+	      	},
+	      	leave(el, done) {
+	        	this.$refs.cdWrapper.style.transition = 'all 0.4s'
+	        	const {x, y, scale} = this._getPosAndScale()
+	        	this.$refs.cdWrapper.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
+	        	const timer = setTimeout(done, 400)
+	        	this.$refs.cdWrapper.addEventListener('transitionend', () => {
+	          	clearTimeout(timer)
+	          	done()
+	        	})
+	      	},
+	      	afterLeave() {
+	        	this.$refs.cdWrapper.style.transition = ''
+	        	this.$refs.cdWrapper.style[transform] = ''
+	      	},
+            _getPosAndScale() {
+		        const targetWidth = 40
+		        const paddingLeft = 40
+		        const paddingBottom = 30
+		        const paddingTop = 80
+		        const width = window.innerWidth * 0.8
+		        const scale = targetWidth / width
+		        const x = -(window.innerWidth / 2 - paddingLeft)
+		        const y = window.innerHeight - paddingTop - width / 2 - paddingBottom
+		        return {
+		          	x,
+		          	y,
+		          	scale
+		        }
+		    },
+            toggleplaying(){
+            	this.setPlayingState(!this.playing)
             },
             ...mapMutations({
-                setFullScreen:'SET_FULL_SCREEN'
+                setFullScreen:'SET_FULL_SCREEN',
+                setPlayingState:'SET_PLAYING_STATE'
             })
         }
     }
@@ -175,6 +258,12 @@
                     width: 100%;
                     height:100%;
                     border-radius:50%;
+                    &.play{
+                    	animation: rotate 20s linear infinite;
+                    }
+                    &.pause{
+                    	animation-play-state: paused;
+                    }
                     &>.image{
                         position: absolute;
                         left: 0;
@@ -246,6 +335,12 @@
         &>.imgWrapper{
             height: 100%;
             width:100%;
+            &.play{
+            	animation: rotate 20s linear infinite;
+            }
+            &.pause{
+            	animation-play-state: paused;
+            }
             img{
                 border-radius: 50%;
             }
@@ -285,7 +380,7 @@
             font-size: 30px;
             color: rgba(255,205,49,.5);
         }
-        &>.icon-play-mini{
+        &>.icon-play-mini,.icon-pause-mini{
             font-size: 30px;
             color: rgba(255,205,49,.5);
         }
@@ -295,6 +390,14 @@
     }
     &.mini-enter,&.mini-leave-to{
         opacity: 0;
+    }
+    @keyframes rotate {
+    	0%{
+    		transform: rotate(360deg);
+    	},
+    	100%{
+    		transform: rotate(0deg);
+    	}
     }
 }
 </style>
