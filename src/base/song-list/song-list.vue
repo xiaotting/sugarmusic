@@ -33,6 +33,7 @@
 
 <style scoped lang="scss">
 .song-list{
+    margin-bottom: 40px;
     .item{
         display: flex;
         align-item:center;

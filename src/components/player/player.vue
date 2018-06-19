@@ -28,18 +28,25 @@
                 </div>
             </div>
             <div class="bottom">
+                <div class="progress-wrapper">
+                    <span class="time time-l">{{format(currentTime)}}</span>
+                    <div class="progress-bar-wrapper">
+                        <progress-bar :percent="percent"></progress-bar>
+                    </div>
+                    <span class="time time-r">{{format(currentSong.duration)}}</span>
+                </div>
                 <div class="operators">
                     <div class="icon i-left">
                         <i class="icon-sequence"></i>
                     </div>
-                    <div class="icon i-left">
-                        <i class="icon-prev"></i>
+                    <div class="icon i-left" :class="disableCls">
+                        <i class="icon-prev" @click="prev"></i>
                     </div>
-                    <div class="icon i-center">
+                    <div class="icon i-center" :class="disableCls">
                         <i :class="playIcon" @click="toggleplaying"></i>
                     </div>
-                    <div class="icon i-right">
-                        <i class="icon-next"></i>
+                    <div class="icon i-right" :class="disableCls">
+                        <i class="icon-next" @click="next"></i>
                     </div>
                     <div class="icon i-right">
                         <i class="icon-not-favorite"></i>
@@ -67,7 +74,7 @@
             </div>
         </div>
         </transition>
-	    <audio :src="currentSong.url" ref="audio">
+	    <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime">
 	    	
 	    </audio>
     </div>
@@ -77,8 +84,17 @@
     import {mapGetters,mapMutations} from 'vuex'
     import animations from 'create-keyframe-animation'
     import { prefixStyle } from '@/common/js/dom'
+    const transform = prefixStyle('transform')
+    import ProgressBar from '@/base/progress-bar/progress-bar'
     export default {
         name: "player",
+        components:{ProgressBar},
+        data(){
+            return{
+                songReady:false,
+                currentTime:0,
+            }
+        },
         computed:{
         	cdCls(){
         		return this.playing ? 'play':'play pause'
@@ -89,11 +105,18 @@
         	miniIcon(){
         		return this.playing ? 'icon-pause-mini':'icon-play-mini'
         	},
+            disableCls(){
+                return this.songReady ? '':'disable'
+            },
+            percent(){
+        	    return this.currentTime / this.currentSong.duration
+            },
             ...mapGetters([
                 'fullScreen',
                 'playlist',
                 'currentSong',
-                'playing'
+                'playing',
+                'currentIndex'
             ])
         },
         watch:{
@@ -177,11 +200,66 @@
 		        }
 		    },
             toggleplaying(){
+                if(!this.songReady){
+                    return
+                }
             	this.setPlayingState(!this.playing)
+            },
+            prev(){
+                if(!this.songReady){
+                    return
+                }
+                let index = this.currentIndex - 1
+                if(index === -1){
+                    index = 0
+                }
+                this.setCurrentIndex(index)
+                if(!this.playing){
+                    this.toggleplaying()
+                }
+                this.songReady = false
+            },
+            next(){
+                if(!this.songReady){
+                    return
+                }
+                let index = this.currentIndex + 1
+                if(index === this.playlist.length){
+                    index = this.playlist.length - 1
+                }
+                this.setCurrentIndex(index)
+                if(!this.playing){
+                    this.toggleplaying()
+                }
+                this.songReady = false
+            },
+            ready(){
+              this.songReady = true
+            },
+            error(){
+                this.songReady = true
+            },
+            updateTime(e){
+                this.currentTime = e.target.currentTime
+            },
+            format(interval){
+                interval =  interval | 0
+                const minute = interval / 60 | 0
+                const second = this._pad(interval % 60)
+                return `${minute}:${second}`
+            },
+            _pad(num, n = 2){
+                let len = num.toString().length
+                while(len<n){
+                    num = '0' + num
+                    len ++
+                }
+                return num
             },
             ...mapMutations({
                 setFullScreen:'SET_FULL_SCREEN',
-                setPlayingState:'SET_PLAYING_STATE'
+                setPlayingState:'SET_PLAYING_STATE',
+                setCurrentIndex:'SET_CURRENT_INDEX'
             })
         }
     }
@@ -282,12 +360,33 @@
         position:absolute;
         bottom:50px;
         width:100%;
+        &>.progress-wrapper{
+            display: flex;
+            align-items: center;
+            width: 80%;
+            margin: 0px auto;
+            padding:10px 0;
+            &>.time{
+                color:#fff;
+                font-size: 12px;
+                flex: 0 0 30px;
+                width:30px;
+                &.time-l{
+                    text-align: left;
+                }
+                &.time-r{
+                    text-align: right;
+                }
+            }
+            &>.progress-bar-wrapper{flex:1;}
+        }
         &>.operators{
             display: flex;
             align-items: center;
             &>.icon{
                 flex: 1;color:#ffcd32;
                 i{font-size: 30px}
+                &.disable{color: #666}
             }
             &>.i-left{
                 text-align:right;
@@ -394,7 +493,7 @@
     @keyframes rotate {
     	0%{
     		transform: rotate(360deg);
-    	},
+    	}
     	100%{
     		transform: rotate(0deg);
     	}

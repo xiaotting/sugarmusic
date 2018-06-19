@@ -100,6 +100,7 @@
 	margin-top: 10px;
         &>ul{
             width: 100%;
+            margin-bottom: 60px;
             .list-title{
                 color:#f75314
             }

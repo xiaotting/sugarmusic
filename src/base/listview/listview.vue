@@ -181,6 +181,12 @@
             background: rgba(0,0,0,0.7);
             font-family: Helvetica;
             font-size: 14px;
+            .item{
+                padding: 3px;
+                line-height: 1;
+                color: hsla(0,0%,100%,.5);
+                font-size: 12px;
+            }
             .current{
                 color:#f39a00;
             }
