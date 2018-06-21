@@ -158,10 +158,17 @@
     }
     &>.title{
         position: absolute;
-        top:10px;
-        left:45%;
+        top: 0;
+        left: 10%;
         z-index: 40;
+        width: 80%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        text-align: center;
+        line-height: 40px;
         font-size: 18px;
+        color: #fff;
     }
     &>.bg-image{
         position: relative;
