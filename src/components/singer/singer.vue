@@ -93,5 +93,6 @@
         top:80px;
         bottom: 0px;
         width: 100%;
+        overflow: hidden;
     }
 </style>

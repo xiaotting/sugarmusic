@@ -38,11 +38,14 @@
     import SongList from '@/base/song-list/song-list'
     import {prefixStyle} from "../../common/js/dom";
     import { mapActions } from 'vuex'
+    import {playlistMixin} from '@/common/js/mixin'
+
     const RESERVER_HEIGHT = 40
     const transform = prefixStyle('transform')
     export default {
         name: "music-list",
         components:{Scroll,SongList},
+        mixins:[playlistMixin],
         props:{
             bgImage:{
                 type:String,
@@ -113,6 +116,11 @@
                 this.randomPlay({
                     list:this.songs
                 })
+            },
+            handlePlaylist(playlist){
+                const bottom = playlist.length >0 ?'60px':''
+                this.$refs.list.$el.style.bottom = bottom
+                this.$refs.list.refresh()
             },
             ...mapActions([
                 'selectPlay',

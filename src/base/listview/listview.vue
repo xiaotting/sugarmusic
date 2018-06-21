@@ -31,8 +31,10 @@
     import Scroll from  '../../base/scroll/scroll'
     import {getData} from '../../common/js/dom'
     const ANCHOR_HEIGHT = 24
+    import {playlistMixin} from '@/common/js/mixin'
     export default {
         name: "listview",
+        mixins:[playlistMixin],
         props:{
             data:{
                 type:Array,
@@ -104,7 +106,12 @@
                     height += item.clientHeight
                     this.listHeight.push(height)
                 }
-            }
+            },
+            handlePlaylist(playlist){
+                const bottom = playlist.length >0 ?'60px':''
+                this.$refs.listview.$el.style.bottom = bottom
+                this.$refs.listview.refresh()
+            },
         },
         watch:{
             data(){

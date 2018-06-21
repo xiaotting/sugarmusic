@@ -15,7 +15,7 @@
 			    </div>
 				<div class="recommend-list">
 					<h1 class="list-title">热门歌单推荐</h1>
-					<ul>
+					<ul ref="rec">
 						<li class="item" v-for="item in discList">
 							<div class="icon">
 								<img v-lazy="item.imgurl" alt="" />
@@ -37,8 +37,10 @@
 	import Slider from '@/base/slider/slider'
 	import {ERR_OK} from '@/api/config'
 	import scroll from '@/base/scroll/scroll'
-	export default {
-		created(){
+    import {playlistMixin} from '@/common/js/mixin'
+    export default {
+        mixins:[playlistMixin],
+        created(){
 			this._getRecommend();
 			this._getDiscList()
 		},
@@ -77,6 +79,10 @@
 		          	}, 20)
 		        }
 		    },
+            handlePlaylist(playlist){
+                const bottom = playlist.length >0 ?'60px':''
+                this.$refs.rec.style.marginBottom = bottom
+            },
 		}
 	}
 </script>
@@ -87,6 +93,7 @@
     width: 100%;
     top: 88px;
     bottom: 0;
+    overflow: hidden;
 }
 .recommend-content{
 	height: 100%;
@@ -100,7 +107,6 @@
 	margin-top: 10px;
         &>ul{
             width: 100%;
-            margin-bottom: 60px;
             .list-title{
                 color:#f75314
             }
