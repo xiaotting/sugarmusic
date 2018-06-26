@@ -25,7 +25,7 @@
             @scroll="scroll"
         >
             <div class="song-list-wrapper">
-                <song-list :songs="songs" @select="selectItem">
+                <song-list :songs="songs" @select="selectItem" :rank="rank">
 
                 </song-list>
             </div>
@@ -58,7 +58,11 @@
             title:{
                 type:String,
                 default:''
-            }
+            },
+            rank:{
+                type:Boolean,
+                default:false
+            },
         },
         watch:{
             scrollY(newY){
