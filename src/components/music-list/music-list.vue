@@ -29,6 +29,9 @@
 
                 </song-list>
             </div>
+            <div v-show="!songs.length" class="loading-container">
+                <loading></loading>
+            </div>
         </scroll>
     </div>
 </template>
@@ -39,12 +42,13 @@
     import {prefixStyle} from "../../common/js/dom";
     import { mapActions } from 'vuex'
     import {playlistMixin} from '@/common/js/mixin'
+    import Loading from '@/base/loading/loading'
 
     const RESERVER_HEIGHT = 40
     const transform = prefixStyle('transform')
     export default {
         name: "music-list",
-        components:{Scroll,SongList},
+        components:{Scroll,SongList,Loading},
         mixins:[playlistMixin],
         props:{
             bgImage:{
@@ -226,6 +230,12 @@
         background:#131212;
         &>.song-list-wrapper{
             padding:20px 30px;
+        }
+        &>.loading-container{
+            position: absolute;
+            width: 100%;
+            top: 50%;
+            transform: translateY(-50%);
         }
     }
     &>.bg-layer{

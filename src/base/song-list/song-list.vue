@@ -52,6 +52,7 @@
 
 <style scoped lang="scss">
 .song-list{
+    position: relative;
     .item{
         display: flex;
         align-items:center;

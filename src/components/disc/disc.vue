@@ -10,7 +10,6 @@
     import {getSongList} from "../../api/recommend"
     import {createSong, isValidMusic, processSongsUrl} from "../../common/js/song"
     import {ERR_OK} from '@/api/config'
-
     export default {
         name: "disc",
         components:{MusicList},
