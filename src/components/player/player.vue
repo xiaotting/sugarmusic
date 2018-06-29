@@ -93,11 +93,12 @@
                     <i :class="miniIcon" @click.stop="toggleplaying" class="icon-mini"></i>
                 </ProgressCircle>
             </div>
-            <div class="control">
+            <div class="control" @click.stop="showPlaylist">
                 <i class="icon-playlist"></i>
             </div>
         </div>
         </transition>
+        <playlist ref="playlist"></playlist>
 	    <audio
             :src="currentSong.url"
             ref="audio"
@@ -122,9 +123,10 @@
     import {shuffle} from "../../common/js/util";
     import Lyric from 'lyric-parser';
     import Scroll from '@/base/scroll/scroll'
+    import playlist from '@@/playlist/playlist'
     export default {
         name: "player",
-        components:{ProgressBar,ProgressCircle,Scroll},
+        components:{ProgressBar,ProgressCircle,Scroll,playlist},
         data(){
             return{
                 songReady:false,
@@ -436,6 +438,9 @@
                 this.$refs.lyricList.$el.style[transitionDuration] = `${time}ms`
                 this.$refs.middleL.style.opacity = opacity
                 this.$refs.middleL.style[transitionDuration] = `${time}ms`
+            },
+            showPlaylist(){
+                this.$refs.playlist.show();
             },
             ...mapMutations({
                 setFullScreen:'SET_FULL_SCREEN',
