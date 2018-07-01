@@ -4,22 +4,22 @@
             <div class="list-wrapper" @click.stop>
                 <div class="list-header">
                     <h1 class="title">
-                        <i class="icon"></i>
-                        <span class="text"></span>
-                        <span class="clear">
+                        <i :class="iconMode" class="icon"  @click="changeMode"></i>
+                        <span class="text">{{modeText}}</span>
+                        <span class="clear" @click="showConfirm">
                         <i class="icon-clear"></i>
-                    </span>
+                        </span>
                     </h1>
                 </div>
                 <scroll class="list-content" :data="sequenceList" ref="listContent">
-                    <ul>
-                        <li class="item" v-for="(item,index) in sequenceList" :key="index" @click="selectItem(item,index)" ref="listItem">
+                    <transition-group name="list" tag="ul">
+                        <li class="item" v-for="(item,index) in sequenceList" :key="item.id" @click="selectItem(item,index)" ref="listItem">
                             <i class="current" :class="getCurrentIcon(item)"></i>
                             <span class="text">{{item.name}}</span>
                             <span class="like"><i class="icon-not-favorite"></i></span>
-                            <span class="delete"><i class="icon-delete"></i></span>
+                            <span class="delete" @click.stop="deleteOne(item)"><i class="icon-delete"></i></span>
                         </li>
-                    </ul>
+                    </transition-group>
                 </scroll>
                 <div class="list-operate">
                     <div class="add">
@@ -31,29 +31,30 @@
                     <span>关闭</span>
                 </div>
             </div>
+            <confirm text="是否清空播放列表" ref="confirm" confirmBtnText="清空" @confirm="confirmClear"></confirm>
         </div>
     </transition>
 </template>
 
 <script>
-    import {mapGetters,mapMutations} from 'vuex'
+    import {mapActions} from 'vuex'
     import {playMode} from "../../common/js/config";
     import Scroll from '@/base/scroll/scroll'
+    import Confirm from '@/base/confirm/confirm'
+    import { playerMixin } from '@/common/js/mixin'
     export default {
         name: "playlist",
-        components:{Scroll},
+        components:{Scroll,Confirm},
+        mixins: [playerMixin],
         data(){
             return{
                 showFlag:false
             }
         },
         computed:{
-            ...mapGetters([
-                'sequenceList',
-                'currentSong',
-                'playlist',
-                'mode',
-            ])
+            modeText() {
+                return this.mode === playMode.sequence ? '顺序播放' : this.mode === playMode.random ? '随机播放' : '单曲循环'
+            }
         },
         watch:{
             currentSong(newSong,oldSong){
@@ -95,10 +96,27 @@
                 })
                 this.$refs.listContent.scrollToElement(this.$refs.listItem[index],300)
             },
-            ...mapMutations({
-                setCurrentIndex:'SET_CURRENT_INDEX',
-                setPlayingState:'SET_PLAYING_STATE'
-            })
+            deleteOne(item){
+                this.deleteSong(item)
+                if(!this.playlist.length){
+                    this.hide()
+                }
+            },
+            showConfirm(){
+                this.$refs.confirm.show()
+            },
+            confirmClear(){
+                this.deleteSongList()
+                this.hide()
+            },
+            // ...mapMutations({
+            //     setCurrentIndex:'SET_CURRENT_INDEX',
+            //     setPlayingState:'SET_PLAYING_STATE'
+            // }),
+            ...mapActions([
+                'deleteSong',
+                'deleteSongList'
+            ])
         }
     }
 </script>
