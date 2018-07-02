@@ -71,7 +71,7 @@
                         <i class="icon-next" @click="next"></i>
                     </div>
                     <div class="icon i-right">
-                        <i class="icon-not-favorite"></i>
+                        <i class="icon" :class="getFavoriteIcon(currentSong)" @click="toggleFavorite(currentSong)"></i>
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
 </template>
 
 <script>
-    import {mapGetters,mapMutations} from 'vuex'
+    import {mapGetters,mapMutations,mapActions} from 'vuex'
     import animations from 'create-keyframe-animation'
     import { prefixStyle } from '@/common/js/dom'
     const transform = prefixStyle('transform')
@@ -313,7 +313,8 @@
                 }
             },
             ready(){
-              this.songReady = true
+                this.songReady = true
+                this.savePlayHistory(this.currentSong)
             },
             error(){
                 this.songReady = true
@@ -425,7 +426,10 @@
             },
             ...mapMutations({
                 setFullScreen:'SET_FULL_SCREEN',
-            })
+            }),
+            ...mapActions([
+                'savePlayHistory'
+            ])
         }
     }
 </script>
@@ -632,6 +636,7 @@
             &>.i-right{
                 text-align:left;
             }
+            .icon-favorite{color:#d93f30}
         }
     }
     &.normal-enter-active,&.normal-leave-active{

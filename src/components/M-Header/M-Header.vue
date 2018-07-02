@@ -2,6 +2,9 @@
 	<div class="m-header">
 		<div class="icon"></div>
 		<h1 class="text">Sugar music</h1>
+        <router-link to="/user" class="mine" tag="div">
+            <i class="icon-mine"></i>
+        </router-link>
 	</div>
 </template>
 
@@ -10,14 +13,37 @@
 
 <style lang="scss" scoped="scoped">
 .m-header{
-	width:100%;
-	height:44px;
-	background: #131212;
-	position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	&>.icon{background: url(../../common/image/default/default.png) no-repeat center center; width:30px;height:32px;background-size: 100%;}
-	&>.text{color:#f75314;font-size: 18px; font-weight: bold; margin-left: 8px;}
+    position: relative;
+    height: 44px;
+    text-align: center;
+    color: #ffcd32;
+    font-size: 0;
+	&>.icon{
+        background: url(../../common/image/default/default.png) no-repeat;
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 6px;
+        width: 30px;
+        height: 32px;
+        margin-right: 9px;
+        background-size: 30px 32px
+    }
+	&>.text{
+        display: inline-block;
+        vertical-align: top;
+        line-height: 44px;
+        font-size: 18px;
+    }
+    &>.mine{
+        position: absolute;
+        top: 0;
+        right: 0;
+        .icon-mine{
+            display: block;
+            padding: 12px;
+            font-size: 20px;
+            color: #ffcd32;
+        }
+    }
 }
 </style>

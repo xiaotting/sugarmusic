@@ -11,18 +11,18 @@
                         </span>
                     </h1>
                 </div>
-                <scroll class="list-content" :data="sequenceList" ref="listContent">
+                <scroll class="list-content" :data="sequenceList" ref="listContent" :refreshDelay="refreshDelay">
                     <transition-group name="list" tag="ul">
                         <li class="item" v-for="(item,index) in sequenceList" :key="item.id" @click="selectItem(item,index)" ref="listItem">
                             <i class="current" :class="getCurrentIcon(item)"></i>
                             <span class="text">{{item.name}}</span>
-                            <span class="like"><i class="icon-not-favorite"></i></span>
+                            <span class="like" @click.stop="toggleFavorite(item)"><i :class="getFavoriteIcon(item)"></i></span>
                             <span class="delete" @click.stop="deleteOne(item)"><i class="icon-delete"></i></span>
                         </li>
                     </transition-group>
                 </scroll>
                 <div class="list-operate">
-                    <div class="add">
+                    <div class="add" @click="addSong">
                         <i class="icon-add"></i>
                         <span class="text">添加歌曲到队列</span>
                     </div>
@@ -32,6 +32,7 @@
                 </div>
             </div>
             <confirm text="是否清空播放列表" ref="confirm" confirmBtnText="清空" @confirm="confirmClear"></confirm>
+            <add-song ref="AddSong"></add-song>
         </div>
     </transition>
 </template>
@@ -42,13 +43,15 @@
     import Scroll from '@/base/scroll/scroll'
     import Confirm from '@/base/confirm/confirm'
     import { playerMixin } from '@/common/js/mixin'
+    import AddSong from "@@/add-song/add-song"
     export default {
         name: "playlist",
-        components:{Scroll,Confirm},
+        components:{Scroll,Confirm,AddSong},
         mixins: [playerMixin],
         data(){
             return{
-                showFlag:false
+                showFlag:false,
+                refreshDelay:120
             }
         },
         computed:{
@@ -108,6 +111,9 @@
             confirmClear(){
                 this.deleteSongList()
                 this.hide()
+            },
+            addSong(){
+                this.$refs.AddSong.show()
             },
             // ...mapMutations({
             //     setCurrentIndex:'SET_CURRENT_INDEX',

@@ -8,6 +8,7 @@ import Singer from '@@/singer/singer'
 import SingerDetail from '@@/singer-detail/singer-detail'
 import Disc from '@@/disc/disc'
 import TopList from '@@/top-list/top-list'
+import UserCenter from '@@/user-center/user-center'
 Vue.use(Router)
 
 export default new Router({
@@ -55,6 +56,10 @@ export default new Router({
                     component:SingerDetail,
                 }
             ]
-		}
+		},
+        {
+            path:'/user',
+            component:UserCenter,
+        },
   	]
 })
