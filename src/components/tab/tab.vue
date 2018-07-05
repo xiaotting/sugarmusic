@@ -23,14 +23,13 @@
 	display: flex;
 	font-size: 14px;
 	height: 44px;
-	align-items: center;
+	line-height: 44px;
 	.tab-item{
 		flex:1;
 		text-align: center;
 		.tab-link{
 			color:#fff;
 			padding-bottom:5px;
-			cursor: pointer;
 		}
 		&.router-link-active{
 			.tab-link{

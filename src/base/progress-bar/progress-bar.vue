@@ -69,7 +69,14 @@
                 const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
                 const percent = this.$refs.progress.clientWidth / barWidth
                 this.$emit('percentChange',percent)
-            }
+            },
+            setProgressOffset(percent) {
+                if (percent >= 0 && !this.touch.initiated) {
+                    const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
+                    const offsetWidth = percent * barWidth
+                    this._offset(offsetWidth)
+                }
+            },
         }
     }
 </script>

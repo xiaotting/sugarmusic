@@ -13,7 +13,6 @@
 
 <style lang="scss" scoped="scoped">
 .m-header{
-    position: relative;
     height: 44px;
     text-align: center;
     color: #ffcd32;

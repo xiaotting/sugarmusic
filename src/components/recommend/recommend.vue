@@ -59,7 +59,7 @@
 			}
 		},
 		methods:{
-			_getRecommend(){
+            _getRecommend(){
 				getRecommend().then((res)=>{
 					if(res.code === ERR_OK){
 						this.recommends=res.data.slider;
@@ -104,7 +104,7 @@
     width: 100%;
     top: 88px;
     bottom: 0;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 .recommend-content{
 	height: 100%;
