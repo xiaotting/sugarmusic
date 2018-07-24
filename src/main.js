@@ -11,7 +11,7 @@ import store from './store'
 import '@/common/scss/index.scss'
 
 /* eslint-disable no-unused-vars */
-import vConsole from  'vconsole'
+// import vConsole from  'vconsole'
 
 Vue.use(VueLazyload,{
   error:'/static/img/default.png',
