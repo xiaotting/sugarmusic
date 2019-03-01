@@ -1,6 +1,7 @@
 # music
 
-> A Vue.js project
+> A Vue.js project 音乐APP
+项目演示地址：www.xiaotting.cn
 
 ## Build Setup
 
