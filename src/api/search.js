@@ -15,7 +15,7 @@ export function getHotKey() {
 }
 
 export function search(query, page, zhida, perpage) {
-    const url = debug ? '/api/search' : 'http://www.xiaotting.cn/music/api/search'
+    const url = debug ? '/api/search' : 'http://www.xiaotting.cn/api/search'
 
     const data = Object.assign({}, commonParams, {
         w: query,

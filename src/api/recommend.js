@@ -16,7 +16,7 @@ export function getRecommend(){
 
 export function getDiscList() {
   // 线上环境地址，根据自己的需要配置修改
-  const url = debug ? '/api/getDiscList' : 'http://www.xiaotting.cn/music/api/getDiscList'
+  const url = debug ? '/api/getDiscList' : 'http://www.xiaotting.cn/api/getDiscList'
   const data = Object.assign({}, commonParams, {
     platform: 'yqq',
     hostUin: 0,
@@ -38,7 +38,7 @@ export function getDiscList() {
 
 
 export function getSongList(disstid) {
-    const url = debug ? '/api/getCdInfo' : 'http://www.xiaotting.cn/music/api/getCdInfo'
+    const url = debug ? '/api/getCdInfo' : 'http://www.xiaotting.cn/api/getCdInfo'
 
     const data = Object.assign({}, commonParams, {
         disstid,
